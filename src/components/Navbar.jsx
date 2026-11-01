@@ -10,7 +10,7 @@ function Navbar() {
           <a href="#inicio">Inicio</a>
           <a href="#collection">Colección</a>
           <a href="#about">Nosotras</a>
-          <a href="#contact">Contacto</a>
+          <a href="#contact-form">Contacto</a>
         </nav>
       </div>
     </header>

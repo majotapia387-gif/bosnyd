@@ -104,26 +104,26 @@ function Home() {
         </div>
       </section>
 
-      {/* CONTACTO */}
-      <section className="contact" id="contact">
-        <div className="contact__content">
-          <p className="contact__eyebrow">
-            ESTAMOS PARA ESCUCHARTE
-          </p>
+      {/* PRESENTACIÓN DE CONTACTO */}
+<section className="home-contact" id="contacto">
+  <div className="home-contact__content">
+    <p className="home-contact__eyebrow">
+      ESTAMOS PARA ESCUCHARTE
+    </p>
 
-          <h2>
-            Hablemos<span>.</span>
-          </h2>
+    <h2>
+      Hablemos<span>.</span>
+    </h2>
 
-          <p>
-            ¿Tienes preguntas sobre nuestras prendas?
-            Nos encantará conocer lo que tienes en mente.
-          </p>
-        </div>
+    <p>
+      ¿Tienes preguntas sobre nuestras prendas?
+      Nos encantará conocer lo que tienes en mente.
+    </p>
+  </div>
 
-        <a className="contact__button" href="#contact-form">
-          CONTÁCTANOS <span aria-hidden="true">↗</span>
-        </a>
+  <a className="home-contact__button" href="#contact-form">
+    CONTÁCTANOS <span aria-hidden="true">↗</span>
+  </a>
       </section>
     </div>
   );
