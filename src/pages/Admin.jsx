@@ -1,6 +1,6 @@
 
-import { useEffect } from "react";
-import products from "../data/products";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("es-CO", {
@@ -10,16 +10,77 @@ const formatPrice = (price) =>
   }).format(price);
 
 function Admin({ onLogout }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [updating, setUpdating] = useState(null);
+
   useEffect(() => {
     document.title = "Administración | BOSNYD";
+
+    async function loadProducts() {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Error al cargar productos:", error.message);
+        setError("No pudimos cargar los productos.");
+      } else {
+        setProducts(data || []);
+      }
+
+      setLoading(false);
+    }
+
+    loadProducts();
 
     return () => {
       document.title = "BOSNYD";
     };
   }, []);
 
+  async function toggleAvailability(product, colorIndex) {
+    const updatedColors = product.colors.map((color, index) =>
+      index === colorIndex
+        ? { ...color, available: !color.available }
+        : color
+    );
+
+    setUpdating(`${product.id}-${colorIndex}`);
+    setError("");
+
+    const { error } = await supabase
+      .from("products")
+      .update({ colors: updatedColors })
+      .eq("id", product.id);
+
+    if (error) {
+      console.error("Error al actualizar disponibilidad:", error.message);
+      setError("No se pudo actualizar la disponibilidad.");
+    } else {
+      setProducts((previousProducts) =>
+        previousProducts.map((item) =>
+          item.id === product.id
+            ? { ...item, colors: updatedColors }
+            : item
+        )
+      );
+    }
+
+    setUpdating(null);
+  }
+
   const totalVariants = products.reduce(
-    (total, product) => total + product.colors.length,
+    (total, product) => total + (product.colors?.length || 0),
+    0
+  );
+
+  const availableVariants = products.reduce(
+    (total, product) =>
+      total +
+      (product.colors || []).filter((color) => color.available === true).length,
     0
   );
 
@@ -45,7 +106,7 @@ function Admin({ onLogout }) {
         <h1>Panel de administración</h1>
 
         <p className="admin-description">
-          Consulta los productos de la colección ORIGEN.
+          Gestiona los productos y la disponibilidad de la colección ORIGEN.
         </p>
 
         <section className="admin-stats">
@@ -55,13 +116,13 @@ function Admin({ onLogout }) {
           </article>
 
           <article className="admin-stat">
-            <p>Colección</p>
-            <strong>ORIGEN</strong>
+            <p>Variantes</p>
+            <strong>{totalVariants}</strong>
           </article>
 
           <article className="admin-stat">
-            <p>Variantes de color</p>
-            <strong>{totalVariants}</strong>
+            <p>Disponibles</p>
+            <strong>{availableVariants}</strong>
           </article>
         </section>
 
@@ -69,12 +130,20 @@ function Admin({ onLogout }) {
           Catálogo de productos
         </h2>
 
+        {loading && <p>Cargando productos...</p>}
+
+        {error && <p role="alert">{error}</p>}
+
+        {!loading && !error && products.length === 0 && (
+          <p>No hay productos registrados.</p>
+        )}
+
         <section className="admin-product-grid">
           {products.map((product) => (
             <article className="admin-product" key={product.id}>
               <img
-                src={product.colors[0].image}
-                alt={`${product.name} en color ${product.colors[0].name}`}
+                src={product.colors?.[0]?.image}
+                alt={product.name}
               />
 
               <div className="admin-product-info">
@@ -86,19 +155,43 @@ function Admin({ onLogout }) {
                   {product.description}
                 </p>
 
-                <p>
-                  Colores:{" "}
-                  {product.colors.map((color) => color.name).join(" y ")}
-                </p>
+                <div className="admin-variants">
+                  {product.colors?.map((color, index) => {
+                    const isAvailable = color.available === true;
+                    const isUpdating =
+                      updating === `${product.id}-${index}`;
+
+                    return (
+                      <div className="admin-variant" key={index}>
+                        <div>
+                          <strong>{color.name}</strong>
+
+                          <p>
+                            {isAvailable ? "Disponible" : "Agotado"}
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          disabled={updating !== null}
+                          onClick={() =>
+                            toggleAvailability(product, index)
+                          }
+                        >
+                          {isUpdating
+                            ? "Guardando..."
+                            : isAvailable
+                              ? "Marcar agotado"
+                              : "Marcar disponible"}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </article>
           ))}
         </section>
-
-        <p className="admin-footnote">
-          Panel de demostración académica. Actualmente permite
-          consultar el catálogo; todavía no modifica una base de datos.
-        </p>
       </main>
     </div>
   );

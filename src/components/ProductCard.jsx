@@ -1,13 +1,26 @@
+
 import { useState } from "react";
 
 function ProductCard({ product }) {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const [selectedColorName, setSelectedColorName] = useState(
+    product.colors?.[0]?.name
+  );
+
+  const selectedColor = product.colors?.find(
+    (color) => color.name === selectedColorName
+  ) || product.colors?.[0];
 
   const formattedPrice = new Intl.NumberFormat("es-CO", {
     style: "currency",
     currency: "COP",
     maximumFractionDigits: 0,
   }).format(product.price);
+
+  const isAvailable = selectedColor?.available === true;
+
+  if (!selectedColor) {
+    return null;
+  }
 
   return (
     <article className="product-card">
@@ -46,7 +59,7 @@ function ProductCard({ product }) {
                 className={`product-card__color-button ${
                   selectedColor.name === color.name ? "is-selected" : ""
                 }`}
-                onClick={() => setSelectedColor(color)}
+                onClick={() => setSelectedColorName(color.name)}
                 aria-label={`Seleccionar color ${color.name}`}
                 aria-pressed={selectedColor.name === color.name}
               >
@@ -57,6 +70,16 @@ function ProductCard({ product }) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div
+          className={`product-card__availability ${
+            isAvailable ? "is-available" : "is-sold-out"
+          }`}
+          role="status"
+        >
+          <span className="product-card__availability-dot" />
+          {isAvailable ? "Disponible" : "Agotado"}
         </div>
 
         <a
