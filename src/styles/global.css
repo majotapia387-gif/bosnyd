@@ -929,3 +929,127 @@ a {
     width: 100%;
   }
 }
+
+/* FICHA INDIVIDUAL DE PRODUCTO */
+
+.product-detail {
+  min-height: 75vh;
+  padding: 55px 32px 100px;
+  background-color: var(--color-bosnyd-ivory);
+  color: var(--color-bosnyd-dark);
+}
+
+.product-detail__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-detail__back {
+  margin-bottom: 35px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #75645a;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.product-detail__back:hover {
+  color: var(--color-bosnyd-dark);
+}
+
+.product-detail__layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 75px;
+}
+
+.product-detail__gallery {
+  overflow: hidden;
+  background-color: #eee8de;
+}
+
+.product-detail__image {
+  display: block;
+  width: 100%;
+  max-height: 720px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.product-detail__info {
+  max-width: 470px;
+}
+
+.product-detail__eyebrow {
+  margin-bottom: 18px;
+  color: #8b6d5d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+}
+
+.product-detail__info h1 {
+  margin-bottom: 15px;
+  font-family: var(--font-title);
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.product-detail__price {
+  margin-bottom: 25px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.product-detail__description {
+  margin-bottom: 32px;
+  color: #75645a;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.product-detail__colors {
+  margin-bottom: 25px;
+  font-size: 12px;
+  color: #75645a;
+}
+
+.product-detail__colors strong {
+  color: var(--color-bosnyd-dark);
+}
+
+.product-detail__color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.product-detail__note {
+  margin-top: 35px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(43, 27, 23, 0.12);
+  color: #75645a;
+  font-family: var(--font-title);
+  font-size: 17px;
+  font-style: italic;
+}
+
+@media (max-width: 750px) {
+  .product-detail {
+    padding: 35px 20px 70px;
+  }
+
+  .product-detail__layout {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .product-detail__info {
+    max-width: none;
+  }
+}

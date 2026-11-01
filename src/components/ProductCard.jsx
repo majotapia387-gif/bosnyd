@@ -22,6 +22,16 @@ function ProductCard({ product }) {
     return null;
   }
 
+  function handleViewProduct(event) {
+    event.preventDefault();
+
+    const nextPath = `/producto/${product.id}`;
+
+    window.history.pushState({}, "", nextPath);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.scrollTo(0, 0);
+  }
+
   return (
     <article className="product-card">
       <div className="product-card__image-container">
@@ -84,7 +94,8 @@ function ProductCard({ product }) {
 
         <a
           className="product-card__button"
-          href={`#producto-${product.id}`}
+          href={`/producto/${product.id}`}
+          onClick={handleViewProduct}
         >
           Ver producto
         </a>

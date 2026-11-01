@@ -8,6 +8,7 @@ import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import Product from "./pages/Product";
 import StyleFinder from "./components/StyleFinder";
 
 import "./styles/admi.css";
@@ -63,17 +64,30 @@ function App() {
     return <Admin onLogout={handleLogout} />;
   }
 
+  const productMatch = path.match(/^\/producto\/(\d+)$/);
+
+  if (productMatch) {
+    return (
+      <>
+        <Navbar />
+        <Product productId={productMatch[1]} navigate={navigate} />
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <Navbar />
 
-     
-      <Footer /><main>
-  <Home />
-  <StyleFinder />
-  <Collection />
-  <Contact />
-</main>
+      <main>
+        <Home />
+        <StyleFinder />
+        <Collection />
+        <Contact />
+      </main>
+
+      <Footer />
     </>
   );
 }
